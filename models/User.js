@@ -9,6 +9,14 @@ static init(sequelize) {
     primaryKey:true,
     defaultValue:UUIDV4,
     },
+    email:{
+        type:Sequelize.STRING(250),
+        allowNull:false,
+        unique:true,
+        validate:{
+            isEmail:true,
+        }
+    },
     nickname: {
     type: Sequelize.STRING(150),
     allowNull: false,
