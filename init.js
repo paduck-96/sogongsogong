@@ -70,7 +70,6 @@ user : process.env.DB_ID,
 password : process.env.DB_PW,
 database : process.env.DB_NAME
 };
-
 const MySQLStore = require('express-mysql-session')(session);
 app.use(
 session({
@@ -79,6 +78,19 @@ resave: false,
 saveUninitialized: true,
 store : new MySQLStore(options)
 })
+);
+
+/**
+ * DB 접속 설정
+ */
+const { sequelize } = require('./models');
+sequelize.sync({ force: false })
+.then(() => {
+console.log('데이터베이스 연결 성공');
+})
+.catch((err) => {
+console.error("DB 접속 오류 : ", err.message);
+}
 );
 
 /**
