@@ -128,10 +128,12 @@ app.use((err, req, res, next) => {
     res.json({result:"Error", data:res.locals})
 });
 
+module.exports = app;
 /**
  * 서버 실행
  */
-app.listen(app.get('port'), () => {
-    console.log(app.get('port'), "번 포트에서 실행"+
-    "http://localhost");
-});
+// 테스트 실행을 위해 주석 처리
+// app.listen(app.get('port'), () => {
+//     console.log(app.get('port'), "번 포트에서 실행"+
+//     "http://localhost");
+// });

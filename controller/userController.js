@@ -75,7 +75,7 @@ exports.postRegister = async (req, res, next) => {
                     password: hashPassword,
                 });
                 //return res.redirect('/');
-                return res.json({result:"회원가입 성공"})
+                return res.json({result:"Success"})
             } catch (error) {
                 console.error(error);
                 return next(error);
