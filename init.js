@@ -105,7 +105,7 @@ app.use(passport.session());
  * 앞으로 사용되는 Router들은 여기에 Import
  */
 app.use((req, res, next)=>{
-    res.locals.user = req.user;
+    res.locals.user = null;
     next();
 })
 const homeRouter = require("./router/homeRouter");
@@ -125,7 +125,7 @@ app.use((err, req, res, next) => {
     res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
     res.status(err.status || 500);
     //res.render('error');
-    res.json({result:"Error", data:res.locals})
+    res.json({result:"Error", data: res.locals.error + "\n" + err.status + "\t" + err.message})
 });
 
 module.exports = app;
