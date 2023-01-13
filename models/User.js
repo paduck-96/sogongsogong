@@ -9,6 +9,14 @@ static init(sequelize) {
     primaryKey:true,
     defaultValue:UUIDV4,
     },
+    email:{
+        type:Sequelize.STRING(250),
+        allowNull:false,
+        unique:true,
+        validate:{
+            isEmail:true,
+        }
+    },
     nickname: {
     type: Sequelize.STRING(150),
     allowNull: false,
@@ -16,7 +24,7 @@ static init(sequelize) {
     validate:{
         //닉네임은 3자 이상 15자 이하
         //영어 대소문자와 숫자, 한글만 가능
-        is:/^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{3,15}$/,
+        //is:/^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{3,15}$/,
         len:[3, 15]
     }
     },

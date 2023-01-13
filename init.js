@@ -92,7 +92,28 @@ console.log('데이터베이스 연결 성공');
 console.error("DB 접속 오류 : ", err.message);
 }
 );
+/**
+ * passport 사용 설정
+ */
+const passport = require('passport');
+const passportConfig = require('./passport');
+passportConfig();
+app.use(passport.initialize());
+app.use(passport.session());
 
+/**
+ * 앞으로 사용되는 Router들은 여기에 Import
+ */
+const cors = require("cors");
+app.use(cors(
+    //옵션 설정 가능하나 필수는 아님
+));
+app.use((req, res, next)=>{
+    res.locals.user = null;
+    next();
+})
+const homeRouter = require("./router/homeRouter");
+app.use("/", homeRouter);
 /**
  * 에러 라우터 처리
  */
@@ -107,13 +128,16 @@ app.use((err, req, res, next) => {
     res.locals.message = err.message;
     res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
     res.status(err.status || 500);
-    res.render('error');
+    //res.render('error');
+    res.json({result:"Error", data: res.locals.error + "\n" + err.status + "\t" + err.message})
 });
 
+module.exports = app;
 /**
  * 서버 실행
  */
-app.listen(app.get('port'), () => {
-    console.log(app.get('port'), "번 포트에서 실행"+
-    "http://localhost");
-});
+// 테스트 실행을 위해 주석 처리
+// app.listen(app.get('port'), () => {
+//     console.log(app.get('port'), "번 포트에서 실행"+
+//     "http://localhost");
+// });
