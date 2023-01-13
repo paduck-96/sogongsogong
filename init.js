@@ -104,6 +104,10 @@ app.use(passport.session());
 /**
  * 앞으로 사용되는 Router들은 여기에 Import
  */
+const cors = require("cors");
+app.use(cors(
+    //옵션 설정 가능하나 필수는 아님
+));
 app.use((req, res, next)=>{
     res.locals.user = null;
     next();
