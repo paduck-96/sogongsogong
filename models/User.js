@@ -20,13 +20,7 @@ static init(sequelize) {
     nickname: {
     type: Sequelize.STRING(150),
     allowNull: false,
-    unique:true,
-    validate:{
-        //닉네임은 3자 이상 15자 이하
-        //영어 대소문자와 숫자, 한글만 가능
-        //is:/^([a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣]).{3,15}$/,
-        len:[3, 15]
-    }
+    unique:true
     },
     password: {
     type: Sequelize.STRING(256),
@@ -56,8 +50,8 @@ static init(sequelize) {
         paranoid: true,
         modelName: 'User',
         tableName: 'User',
-        charset: 'utf8',
-        collate: 'utf8_general_ci',
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_general_ci',
         });
 }
 static associate(db) {

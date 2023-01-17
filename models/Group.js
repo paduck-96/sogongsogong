@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = class ArticleGroup extends Sequelize.Model {
+module.exports = class Group extends Sequelize.Model {
 static init(sequelize) {
     return super.init({
     groupId: {
@@ -17,15 +17,15 @@ static init(sequelize) {
         sequelize,
         timestamps: true,
         paranoid: true,
-        modelName: 'Article',
-        tableName: 'Article',
+        modelName: 'Group',
+        tableName: 'Group',
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
         });
 }
 static associate(db) {
-    db.ArticleGroup.hasMany(db.Article, {
-        foreignKey:"fk_article_group", sourceKey:"groupId"
-    })
+    db.Group.belongsToMany(db.Article,{
+         through:"ArticleGroup"
+    });
 }
 };

@@ -5,7 +5,7 @@ const config = require('../config/config')[env];
 // 사용 DB Import
 const User = require('./User');
 const Article = require('./Article');
-const ArticleGroup = require('./ArticleGroup');
+const Group = require('./Group');
 
 const db = {};
 
@@ -18,14 +18,14 @@ db.sequelize = sequelize;
 
 db.User = User;
 db.Article = Article;
-db.ArticleGroup = ArticleGroup;
+db.Group = Group;
 
 User.init(sequelize);
 Article.init(sequelize);
-ArticleGroup.init(sequelize);
+Group.init(sequelize);
 
 User.associate(db);
 Article.associate(db);
-ArticleGroup.associate(db);
+Group.associate(db);
 
 module.exports = db;
