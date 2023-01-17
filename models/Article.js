@@ -8,14 +8,14 @@ static init(sequelize) {
     primaryKey:true,
     autoIncrement:true,
     },
-    articleHeader: {
-    type: Sequelize.STRING(200),
+    articleTitle: {
+    type: Sequelize.STRING(800),
     allowNull: false,
     validate:{
         len:[1, 200]
     }
     },
-    articleBody: {
+    articleContent: {
     type: Sequelize.STRING(4096),
     allowNull: false,
     validate:{
@@ -42,8 +42,8 @@ static init(sequelize) {
 static associate(db) {
     db.Article.belongsTo(db.User,
         {foreignKey:"fk_user_article", targetKey:"userId"});
-    db.Article.belongsTo(db.ArticleGroup,{
-        foreignKey:"fk_article_group", targetKey:"groupId"
+    db.Article.belongsToMany(db.Group,{
+         through:"ArticleGroup"
     });
 }
 };

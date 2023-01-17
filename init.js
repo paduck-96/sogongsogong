@@ -84,7 +84,7 @@ store : new MySQLStore(options)
  * DB 접속 설정
  */
 const { sequelize } = require('./models');
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
 .then(() => {
 console.log('데이터베이스 연결 성공');
 })
@@ -135,9 +135,9 @@ app.use((err, req, res, next) => {
 module.exports = app;
 /**
  * 서버 실행
+테스트 실행에는 주석 처리
  */
-// 테스트 실행을 위해 주석 처리
-// app.listen(app.get('port'), () => {
-//     console.log(app.get('port'), "번 포트에서 실행"+
-//     "http://localhost");
-// });
+ app.listen(app.get('port'), () => {
+     console.log(app.get('port'), "번 포트에서 실행"+
+     "http://localhost");
+});
