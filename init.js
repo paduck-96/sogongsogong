@@ -84,7 +84,7 @@ store : new MySQLStore(options)
  * DB 접속 설정
  */
 const { sequelize } = require('./models');
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
 .then(() => {
 console.log('데이터베이스 연결 성공');
 })
@@ -129,7 +129,7 @@ app.use((err, req, res, next) => {
     res.locals.error = process.env.NODE_ENV !== 'production' ? err : {};
     res.status(err.status || 500);
     //res.render('error');
-    res.json({result:"Error", data: res.locals.error + "\n" + err.status + "\t" + err.message})
+    res.json({result:"Error", data: `${res.locals.error}`})
 });
 
 module.exports = app;

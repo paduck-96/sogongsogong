@@ -1,21 +1,18 @@
 const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
+const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
-const bcrypt = require('bcrypt');
-const User = require('../models/user');
+const User = require('../models/User');
 
 module.exports = () => {
-      
-    passport.use(new JwtStrategy({
+    passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJwt.fromHeader('authorization'),
         secretOrKey: 'jwt_secret_code',
-        usernameField: 'email',
-        passwordField: 'password',
     }, async (jwtPayload, done) => {
     try {
+        console.log(jwtPayload);
     const user = await User.findOne({
         where: {
-            email:jwtPayload.sub
+            id:jwtPayload.id
         }
     });
     if (user) {
