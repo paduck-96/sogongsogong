@@ -94,14 +94,14 @@ exports.postLogin = (req, res, next) => {
 			process.env.JWT_SECRET
 		);
         res.locals.user = token;
-        return res.status(200).json({result:"Sucess", data:token})
+        return res.status(200).json({result:"success", data:token})
         });
     })(req, res, next);
 };
 
 exports.getAuth = (req, res, next) => {
     try {
-	    res.status(200).json({ result:"Success", token });
+	    res.status(200).json({ result:"success" });
 	  } catch (error) {
 	    console.error(error);
 	    next(error);
