@@ -42,8 +42,8 @@ static init(sequelize) {
 static associate(db) {
     db.Article.belongsTo(db.User,
         {foreignKey:"fk_user_article", targetKey:"userId"});
-    db.Article.belongsToMany(db.Group,{
-         through:"ArticleGroup"
+    db.Article.belongsToMany(db.Category,{
+         as:"categories", through:"ArticleCategory", foreignKey:"articleId", uniqueKey:"articleCategoryId"
     });
 }
 };
