@@ -113,7 +113,9 @@ app.use((req, res, next)=>{
     next();
 })
 const homeRouter = require("./router/homeRouter");
+const articleRouter = require("./router/articleRouter");
 app.use("/", homeRouter);
+app.use("/articles", articleRouter);
 /**
  * 에러 라우터 처리
  */
@@ -132,12 +134,12 @@ app.use((err, req, res, next) => {
     res.json({result:"Error", data: `${res.locals.error}`})
 });
 
-module.exports = app;
 /**
  * 서버 실행
 테스트 실행에는 주석 처리
- */
- app.listen(app.get('port'), () => {
-     console.log(app.get('port'), "번 포트에서 실행"+
-     "http://localhost");
-});
+*/
+//  app.listen(app.get('port'), () => {
+    //      console.log(app.get('port'), "번 포트에서 실행"+
+    //      "http://localhost");
+    // });
+    module.exports = app;
