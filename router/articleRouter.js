@@ -1,13 +1,11 @@
 const express = require('express');
-//const passport = require('passport');
+const {isLoggedIn} = require("./middleware");
 
 const router = express.Router();
 
-const {getArticles, getGroupArticles} = require("../controller/articleController");
+const {getArticleWrite, postArticleWrite, getArticleViewAndUpdate, postArticleUpdate, deleteArticle} = require("../controller/articleController");
 
-
-//article controller
-router.route("/").get(getArticles)
-router.route("/:articlegroup").get(getGroupArticles).post();
+router.route("/").get(getArticleWrite).post(postArticleWrite);
+router.route("/:articleId").get(getArticleViewAndUpdate).post(postArticleUpdate).delete(deleteArticle);
 
 module.exports = router;
