@@ -6,6 +6,7 @@ const config = require('../config/config')[env];
 const User = require('./User');
 const Article = require('./Article');
 const Category = require('./Category');
+const Reaction = require("./Reaction");
 
 const db = {};
 
@@ -19,13 +20,16 @@ db.sequelize = sequelize;
 db.User = User;
 db.Article = Article;
 db.Category = Category;
+db.Reaction = Reaction;
 
 User.init(sequelize);
 Article.init(sequelize);
 Category.init(sequelize);
+Reaction.init(sequelize);
 
 User.associate(db);
 Article.associate(db);
 Category.associate(db);
+Reaction.associate(db);
 
 module.exports = db;
