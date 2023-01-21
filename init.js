@@ -113,9 +113,11 @@ app.use((req, res, next)=>{
     next();
 })
 const homeRouter = require("./router/homeRouter");
+const articlesRouter = require("./router/articlesRouter");
 const articleRouter = require("./router/articleRouter");
 app.use("/", homeRouter);
-app.use("/articles", articleRouter);
+app.use("/articles", articlesRouter);
+app.use("/article", articleRouter);
 /**
  * 에러 라우터 처리
  */
