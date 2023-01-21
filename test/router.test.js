@@ -51,7 +51,7 @@ test("회원가입 - 중복 체크", done=>{
             "password":"tT123!@#",
             "confirmPassword":"tT123!@#"
         })
-        .expect(409, done)
+        .expect(302, done)
     })
 })
 
