@@ -25,7 +25,7 @@ static init(sequelize) {
 }
 static associate(db) {
     db.Category.belongsToMany(db.Article,{
-         as:"articles", through:"ArticleCategory", foreignKey:"categoryId", uniqueKey:"articleCategoryId"
+         through:"ArticleAndCategory", foreignKey:"categoryId"
     });
 }
 };
