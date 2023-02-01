@@ -38,7 +38,7 @@ static associate(db) {
         db.Article.hasMany(db.Reaction,
             {foreignKey:"fk_article_reaction", sourceKey:"articleId"});
     db.Article.belongsToMany(db.Category,{
-         as:"categories", through:"ArticleCategory", foreignKey:"articleId", uniqueKey:"articleCategoryId"
+         through:"ArticleAndCategory", foreignKey:"articleId"
     });
 }
 };

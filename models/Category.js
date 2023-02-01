@@ -10,6 +10,7 @@ static init(sequelize) {
     },
     categoryName:{
         type:Sequelize.STRING(100),
+        unique:true,
         allowNull:false,
         defaultValue:"미정"
     }
@@ -25,7 +26,7 @@ static init(sequelize) {
 }
 static associate(db) {
     db.Category.belongsToMany(db.Article,{
-         as:"articles", through:"ArticleCategory", foreignKey:"categoryId", uniqueKey:"articleCategoryId"
+         through:"ArticleAndCategory", foreignKey:"categoryId"
     });
 }
 };
