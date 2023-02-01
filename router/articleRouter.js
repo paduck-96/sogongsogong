@@ -5,7 +5,8 @@ const router = express.Router();
 
 const {getArticleWrite, postArticleWrite, getArticleViewAndUpdate, postArticleUpdate, deleteArticle} = require("../controller/articleController");
 
-router.route("/").get(getArticleWrite).post(postArticleWrite);
-router.route("/:articleId").get(getArticleViewAndUpdate).post(postArticleUpdate).delete(deleteArticle);
+router.route("/").get(isLoggedIn, getArticleWrite).post(isLoggedIn, postArticleWrite);
+router.route("/:articleId").get(getArticleViewAndUpdate).delete(deleteArticle);
+router.route("/:articleId/update").put(postArticleUpdate);
 
 module.exports = router;
