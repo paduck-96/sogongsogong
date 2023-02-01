@@ -1,8 +1,11 @@
+const { ArticleAndCategory } = require("../models");
 const Article = require("../models/Article");
 const Category = require("../models/Category");
 
 exports.getArticleWrite = async( req, res, next) => {
-    try{}
+    try{
+        //
+    }
     catch(err){
         console.error(err);
         return next(err);
@@ -11,27 +14,26 @@ exports.getArticleWrite = async( req, res, next) => {
 }
 exports.postArticleWrite = async ( req, res, next) => {
     const {articleTitle, articleContent, categoryName} = req.body;
+    
     try{
         if(articleTitle.trim() === "" || articleContent.trim() === ""){
             return res.status(400).json({result:"fail", message:"제목과 내용을 입력해주세요"})
         }
-        const resultArticle = await Article.create({
+        const data = await Article.create({
             articleTitle,
-            articleContent
+            articleContent,
+        },{
+            include:Category
         })
-        .catch(err => {
-            console.error(err);
-            next(err);
+        const categories = categoryName.split(",");
+        let response = {};
+        categories.map(async category=>{
+            const result = await Category.create({
+                categoryName:category.trim()
+            })
+            response += await data.addCategory(result.categoryId);
         })
-        const resultCategory = await Category.create({
-            categoryName
-        })
-        .catch(err => {
-            console.error(err);
-            next(err);
-        })
-        console.log(resultArticle, resultCategory)
-        return res.status(201).json({result:"success", message:"게시글 생성", data:resultCategory + resultArticle})
+        return res.status(201).json({result:"success", message:"게시글 생성", data:response});
     }catch(err){
         console.error(err);
         return next(err);
@@ -45,50 +47,84 @@ exports.getArticleViewAndUpdate = async ( req, res, next) => {
         const article = await Article.findOne({
             where:{
                 articleId
-            }
+            },
         })
+            const categories = await ArticleAndCategory.findAll({
+                where:{
+                    articleId
+                }
+            })
+            const categoryArr = [];
+            for(let name of categories){
+                const data = await Category.findOne({
+                    where:{
+                        categoryId:name.categoryId
+                    },
+                    attributes:["categoryName"]
+                })
+                categoryArr.push(data.categoryName)
+            }
         if(article === null){
-            return res.status(204).json({result:"fail", message:"없는 게시글입니다"})
+            return res.json({result:"fail", data:"게시글 없음"}).status(204)
         }
-            return res.status(200).json({result:"success", data:article})
+            return res.json({result:"success", article, category:categoryArr}).status(200)
     }catch(err){
         console.error(err);
         return next(err);
     }
 }
 
-exports.postArticleUpdate = async ( req, res, next) => {
+exports.postArticleUpdate = ( req, res, next) => {
     const {articleId} = req.params;
-    const  {articleTitle, articleContent, categoryName } = req.body;
+    const  {articleTitle, articleContent } = req.body;
     try{
-        const newArticle = await Article.update({
+        Article.update({
             articleTitle,
             articleContent,
-            categoryName,
         },{
             where:{
                 articleId
             }
+        },{
+            include:Category
         })
-        if(!newArticle){
+            return res.status(201).json({result:"success", message:"업데이트 성공"})
+        }catch(err){
+            console.error(err);
+            next(err);
             return res.status(400).json({result:"fail", message:"업데이트 실패"})
-        }
-        return res.status(201).json({result:"success", message:"업데이트 성공", data:newArticle})
-    }catch(err){
-        console.error(err);
-        return next(err);
     }
 }
 
 exports.deleteArticle = async ( req, res, next) => {
     const { articleId} = req.params;
     try{
+        const deleteCategory = await ArticleAndCategory.findAll({
+            where:{
+                articleId
+            },
+            attributes:["categoryId"]
+        })
+        for(let category of deleteCategory){
+            const data = await Category.findOne({
+                where:{
+                    categoryId:category.categoryId
+                },
+                attributes:["categoryName"]
+            })
+            await Category.destroy({
+                where:{
+                    categoryName:data.categoryName
+                }
+            })
+        }
         const deleteArticle = await Article.destroy({
             where:{
                 articleId
-            }
+            },
+            include:Category
         })
-        if(!deleteArticle){
+        if(deleteArticle.length === 0){
             return res.status(400).json({result:"fail", message:"삭제 실패"})
         }
         return res.status(200).json({result:"success", message:"삭제 성공"})

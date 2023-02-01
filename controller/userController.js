@@ -4,7 +4,7 @@ const User = require('../models/User');
 const jwt = require("jsonwebtoken")
 
 exports.getRegister = (req, res, next)=>{
-    return res.status(200).json({result:"Success", data:"회원가입 페이지 출력"})
+    return res.status(200).json({result:"success", data:"회원가입 페이지 출력"})
 }
 /**
  * 
@@ -93,7 +93,7 @@ exports.postLogin = (req, res, next) => {
 			{ id: user.userId, email: user.email, auth: user.auth },
 			process.env.JWT_SECRET
 		);
-        res.locals.user = token;
+        res.user.token = token;
         return res.status(200).json({result:"success", data:token})
         });
     })(req, res, next);
