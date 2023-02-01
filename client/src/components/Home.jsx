@@ -8,8 +8,8 @@ const Home = () => {
         <div>
             <main>
                 <div >
-                    <Link to='/articles'>게시글 보러가기</Link>
-                    <Link to='/:memberId/write'>게시글 작성하기</Link>
+                    <Link to='/articles'>게시글 보러가기</Link><br/>
+                    <Link to='/article'>게시글 작성하기</Link>
                 </div>
             </main>
             <footer>
