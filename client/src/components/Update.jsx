@@ -14,6 +14,7 @@ const Update = () => {
             fetch(`http://localhost/article/${params.articleId}`,{
                 headers:{
                     "Content-Type":"application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token")
                 }
             })
             .then(res=>res.json())
@@ -37,10 +38,16 @@ const Update = () => {
         if(articleInfo.articleTitle.trim() === "" || articleInfo.articleContent.trim() === ""){
             alert("내용 입력 필수");
         }
+        if(articleInfo.articleTitle.trim().length>200){
+            alert("제목 길이 초과!");
+        }if(articleInfo.articleContent.trim().length>200){
+            alert("내용 길이 초과!");
+        }
         const response = await fetch(`http://localhost/article/${params.articleId}/update`, {
             method:"PUT",
             headers:{
                 "Content-Type":"application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
             },
             body:JSON.stringify({
                 articleTitle:articleInfo.articleTitle,
