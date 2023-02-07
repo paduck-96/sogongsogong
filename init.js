@@ -8,10 +8,18 @@ dotenv.config();
 
 /**
  * 서버 설정
- */
+*/
 const app = express();
 app.set('port', process.env.PORT);
 
+/**
+ * cors 설정
+ */
+const cors = require("cors");
+app.use(cors({
+    origin:true,
+    credentials:true
+}));
 /**
  * 로그 파일 기록 설정
  */
@@ -43,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 const compression = require('compression');
 app.use(compression());
+app.use(express.json());
 /**
  * post 방식의 파라미터 읽기
  */
@@ -75,8 +84,11 @@ app.use(
 session({
 secret: process.env.COOKIE_SECRET,
 resave: false,
-saveUninitialized: true,
-store : new MySQLStore(options)
+saveUninitialized: false,
+store : new MySQLStore(options),
+cookie:{
+    maxAge:24*60*60*1000
+}
 })
 );
 
@@ -92,26 +104,10 @@ console.log('데이터베이스 연결 성공');
 console.error("DB 접속 오류 : ", err.message);
 }
 );
-/**
- * passport 사용 설정
- */
-const passport = require('passport');
-const passportConfig = require('./passport');
-passportConfig();
-app.use(passport.initialize());
-app.use(passport.session());
 
 /**
  * 앞으로 사용되는 Router들은 여기에 Import
  */
-const cors = require("cors");
-app.use(cors(
-    //옵션 설정 가능하나 필수는 아님
-));
-app.use((req, res, next)=>{
-    res.locals.user = null;
-    next();
-})
 const homeRouter = require("./router/homeRouter");
 const articlesRouter = require("./router/articlesRouter");
 const articleRouter = require("./router/articleRouter");
@@ -140,8 +136,8 @@ app.use((err, req, res, next) => {
  * 서버 실행
 테스트 실행에는 주석 처리
 */
-//  app.listen(app.get('port'), () => {
-    //      console.log(app.get('port'), "번 포트에서 실행"+
-    //      "http://localhost");
-    // });
-    module.exports = app;
+ app.listen(app.get('port'), () => {
+         console.log(app.get('port'), "번 포트에서 실행"+
+         "http://localhost");
+    });
+    // module.exports = app;
