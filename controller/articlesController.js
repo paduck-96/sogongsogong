@@ -3,6 +3,7 @@ const Category = require("../models/Category");
 const ArticleAndCategory = require("../models/ArticleAndCategory");
 const { Op } = require("sequelize");
 
+// 무한 스크롤 추가 예정
 exports.getArticles =  async (req, res, next) => {
     try{
         const resultArr = await ArticleAndCategory.findAll({
