@@ -144,9 +144,12 @@ _Below is an example of how you can instruct your audience on installing and set
 <!-- USAGE EXAMPLES -->
 ## 사용 예시
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+이 서비스에는 충조평판이 없습니다.  
+카테고리에 맞는 게시글을 작성합니다.  
+타인의 게시글을 읽거나 리액션을 달 수 있습니다.  
+서비스가 마음에 들었다면 구독을 통해 조금 더 다양한 느낌의 서비스를 이용할 수 있습니다
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+_경험을 위해 직접 사용해보세요 [소소한 공감;소공](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
