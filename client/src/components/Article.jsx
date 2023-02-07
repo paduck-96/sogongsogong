@@ -10,6 +10,7 @@ const Article = () => {
             fetch(`http://localhost/article/${params.articleId}`,{
                 headers:{
                     "Content-Type":"application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token") 
                 }
             })
             .then(res=>res.json())
@@ -19,7 +20,10 @@ const Article = () => {
                 },[params.articleId, setArticle])
         const onClickDeleteHandler = async (e) => {
             const response = await fetch(`http://localhost/article/${params.articleId}`,{
-                method:"DELETE"
+                method:"DELETE",
+                headers:{
+                    "Authorization": "Bearer " + localStorage.getItem("token") 
+                }
             })
             .then(res=>res.json())
             if(response.result==="success"){
