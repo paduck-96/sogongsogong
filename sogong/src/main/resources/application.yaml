@@ -1,10 +1,8 @@
 server: # ??? ?? ??
   port: 80
 spring:
-  profiles: # boot ???? ??
-    include: oauth # ?? ??? ??
   datasource: # ?? DB ?? ??
-    url: jdbc:mariadb://localhost:3306/sogong
+    url: jdbc:mariadb://localhost:3306/sogong_java
     driver-class-name: org.mariadb.jdbc.Driver
     username: root
     password: rootPassword

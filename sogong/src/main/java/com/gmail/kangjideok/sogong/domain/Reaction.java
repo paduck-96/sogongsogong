@@ -13,9 +13,11 @@ import javax.persistence.*;
 @Table(name = "Reaction")
 public class Reaction extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="reaction_id")
     private Long reactionId;
 
+    @Column(name="reaction_content", nullable = false)
     private String reactionContent;
 
     @ManyToOne(fetch = FetchType.LAZY)
