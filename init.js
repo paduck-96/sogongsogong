@@ -45,6 +45,7 @@ app.use(morgan('combined', {stream: accessLogStream}));
  * static 파일의 경로 설정
  */
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 /**
  * 출력하는 파일 압축해서 전송
@@ -131,7 +132,10 @@ app.use((err, req, res, next) => {
     //res.render('error');
     res.json({result:"Error", data: `${res.locals.error}`})
 });
-
+app.get("*", (req, res) =>{
+    console.log(__dirname);
+    res.sendFile(path.join(__dirname, "/client/build/index.html"));
+})
 /**
  * 서버 실행
 테스트 실행에는 주석 처리
