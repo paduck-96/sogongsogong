@@ -28,7 +28,6 @@ pipeline {
     stage('NodeJS Build') {
       steps {
           sh 'npm install'
-          sh 'npm run build'
           }
       post {
         failure {
