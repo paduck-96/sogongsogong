@@ -2,7 +2,7 @@ pipeline {
   agent any
   // any, none, label, node, docker, dockerfile, kubernetes
   tools {
-    NodeJS 'my_node'
+    nodejs 'my_node'
   }
   environment {
     gitName = 'paduck-96'
@@ -50,6 +50,29 @@ pipeline {
         }
         success {
           echo 'Docker image build success'  
+        }
+      }
+     stage('Docker Image Push') {
+      steps {
+          // 도커 허브의 크리덴셜
+          withDockerRegistry(credentialsId: dockerHubRegistryCredential, url: '') {
+          // withDockerRegistry : docker pipeline 플러그인 설치시 사용가능.
+          // dockerHubRegistryCredential : environment에서 선언한 docker_cre
+            sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
+            sh "docker push ${dockerHubRegistry}:latest"
+          }  
+      }
+      post {
+      // docker push가 성공하든 실패하든 로컬의 도커이미지는 삭제.
+        failure {
+          echo 'Docker Image Push failure'
+          sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+          sh "docker rmi ${dockerHubRegistry}:latest"
+        }
+        success {
+          echo 'Docker Image Push success'
+          sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+          sh "docker rmi ${dockerHubRegistry}:latest"
         }
       }
     }
