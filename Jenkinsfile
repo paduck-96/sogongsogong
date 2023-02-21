@@ -2,7 +2,7 @@ pipeline {
   agent any
   // any, none, label, node, docker, dockerfile, kubernetes
   tools {
-    maven 'my_maven'
+    NodeJS 'my_node'
   }
   environment {
     gitName = 'paduck-96'
@@ -25,9 +25,10 @@ pipeline {
       }
     }
 
-    stage('Maven Build') {
+    stage('NodeJS Build') {
       steps {
-          sh 'mvn clean install'
+          sh 'npm install'
+          sh 'npm run build'
           }
       post {
         failure {
