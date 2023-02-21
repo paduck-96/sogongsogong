@@ -31,10 +31,10 @@ pipeline {
           }
       post {
         failure {
-          echo 'Maven jar build failure'
+          echo 'node build failure'
         }
         success {
-          echo 'Maven jar build success'  
+          echo 'node build success'  
         }
       }
     }
