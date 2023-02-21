@@ -52,6 +52,7 @@ pipeline {
           echo 'Docker image build success'  
         }
       }
+    }
      stage('Docker Image Push') {
       steps {
           // 도커 허브의 크리덴셜
