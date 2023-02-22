@@ -59,7 +59,7 @@ pipeline {
           withDockerRegistry(credentialsId: dockerHubRegistryCredential, url: '') {
           // withDockerRegistry : docker pipeline 플러그인 설치시 사용가능.
           // dockerHubRegistryCredential : environment에서 선언한 docker_cre
-            bat "docker push ${dockerHubRegistry}:${currentBuild.number}"
+            bat "docker push ${dockerHubRegistry}"
             bat "docker push ${dockerHubRegistry}:latest"
           }  
       }
@@ -67,12 +67,12 @@ pipeline {
       // docker push가 성공하든 실패하든 로컬의 도커이미지는 삭제.
         failure {
           echo 'Docker Image Push failure'
-          bat "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+          bat "docker rmi ${dockerHubRegistry}"
           bat "docker rmi ${dockerHubRegistry}:latest"
         }
         success {
           echo 'Docker Image Push success'
-          bat "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+          bat "docker rmi ${dockerHubRegistry}"
           bat "docker rmi ${dockerHubRegistry}:latest"
         }
       }
@@ -86,7 +86,7 @@ pipeline {
         // 이미지 태그 변경 후 메인 브랜치에 푸시
         bat "git config --global user.email ${gitEmail}"
         bat "git config --global user.name ${gitName}"
-        bat "sed -i 's/sbimage:.*/sbimage:${currentBuild.number}/g' deploy/sb-deploy.yml"
+        bat "sed -i 's/sogong:.*/sogong:1.0/g' deploy/sogong-deploy.yml"
         // deploy폴더의 sd-deploy.yml 파일의 내용을 수정하는 부분.
         bat "git add ."
         bat "git commit -m 'fix:${dockerHubRegistry} ${currentBuild.number} image versioning'"
