@@ -41,7 +41,7 @@ pipeline {
     }
     stage('Docker Image Build') {
       steps {
-          bat "docker build -t ${dockerHubRegistry}:${currentBuild.number} ."
+          bat "docker build -t ${dockerHubRegistry} ."
           bat "docker build -t ${dockerHubRegistry}:latest ."
           }
       post {
