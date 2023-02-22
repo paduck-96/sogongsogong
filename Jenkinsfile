@@ -29,7 +29,6 @@ pipeline {
       steps {
           bat 'npm install'
           echo 'npm installation complete'
-          bat 'npm run build'
           }
       post {
         failure {
