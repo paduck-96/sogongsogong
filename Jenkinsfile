@@ -42,7 +42,6 @@ pipeline {
     stage('Docker Image Build') {
       steps {
           bat "docker build -t ${dockerHubRegistry} ."
-          bat "docker build -t ${dockerHubRegistry}:latest ."
           }
       post {
         failure {
@@ -60,7 +59,6 @@ pipeline {
           // withDockerRegistry : docker pipeline 플러그인 설치시 사용가능.
           // dockerHubRegistryCredential : environment에서 선언한 docker_cre
             bat "docker push ${dockerHubRegistry}"
-            bat "docker push ${dockerHubRegistry}:latest"
           }  
       }
       post {
@@ -68,12 +66,10 @@ pipeline {
         failure {
           echo 'Docker Image Push failure'
           bat "docker rmi ${dockerHubRegistry}"
-          bat "docker rmi ${dockerHubRegistry}:latest"
         }
         success {
           echo 'Docker Image Push success'
           bat "docker rmi ${dockerHubRegistry}"
-          bat "docker rmi ${dockerHubRegistry}:latest"
         }
       }
     }
