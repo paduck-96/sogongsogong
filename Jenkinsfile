@@ -86,7 +86,7 @@ pipeline {
         //bat "sed -i 's/sogong:.*/sogong:1.0/g' deploy/sogong-deploy.yml"
         // deploy폴더의 sd-deploy.yml 파일의 내용을 수정하는 부분.
         bat "git add ."
-        bat "git commit -m 'fix:${dockerHubRegistry} image versioning'"
+        bat "git commit -m "fix:${dockerHubRegistry} image versioning""
         //${currentBuild.number}
         bat "git branch -M cicd"
         bat "git remote remove origin"
