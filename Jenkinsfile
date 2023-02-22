@@ -83,7 +83,7 @@ pipeline {
         // 이미지 태그 변경 후 메인 브랜치에 푸시
         bat "git config --global user.email ${gitEmail}"
         bat "git config --global user.name ${gitName}"
-        bat "sed -i 's/sogong:.*/sogong:1.0/g' deploy/sogong-deploy.yml"
+        //bat "sed -i 's/sogong:.*/sogong:1.0/g' deploy/sogong-deploy.yml"
         // deploy폴더의 sd-deploy.yml 파일의 내용을 수정하는 부분.
         bat "git add ."
         bat "git commit -m 'fix:${dockerHubRegistry} ${currentBuild.number} image versioning'"
