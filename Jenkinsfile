@@ -27,7 +27,7 @@ pipeline {
 
     stage('NodeJS Build') {
       steps {
-          sh 'npm install'
+          	sh 'npm install'
           }
       post {
         failure {
@@ -76,5 +76,24 @@ pipeline {
         }
       }
     }
+    stage('k8s manifest file update') {
+      steps {
+        git credentialsId: githubCredential,
+            url: 'https://github.com/paduck-96/sogongsogong.git',
+            branch: 'cicd'  
+
+        // 이미지 태그 변경 후 메인 브랜치에 푸시
+        sh "git config --global user.email ${gitEmail}"
+        sh "git config --global user.name ${gitName}"
+        sh "sed -i 's/sbimage:.*/sbimage:${currentBuild.number}/g' deploy/sb-deploy.yml"
+        // deploy폴더의 sd-deploy.yml 파일의 내용을 수정하는 부분.
+        sh "git add ."
+        sh "git commit -m 'fix:${dockerHubRegistry} ${currentBuild.number} image versioning'"
+        sh "git branch -M cicd"
+        sh "git remote remove origin"
+        sh "git remote add origin git@github.com:paduck-96/sogongsogong.git"
+        sh "git push -u origin cicd"
+}
+}
   }
 }
