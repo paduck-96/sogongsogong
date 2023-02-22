@@ -28,6 +28,8 @@ pipeline {
     stage('NodeJS Build') {
       steps {
           bat 'npm install'
+          echo 'npm installation complete'
+          bat 'npm run build'
           }
       post {
         failure {
@@ -40,8 +42,8 @@ pipeline {
     }
     stage('Docker Image Build') {
       steps {
-          sh "docker build -t ${dockerHubRegistry}:${currentBuild.number} ."
-          sh "docker build -t ${dockerHubRegistry}:latest ."
+          bat "docker build -t ${dockerHubRegistry}:${currentBuild.number} ."
+          bat "docker build -t ${dockerHubRegistry}:latest ."
           }
       post {
         failure {
@@ -58,21 +60,21 @@ pipeline {
           withDockerRegistry(credentialsId: dockerHubRegistryCredential, url: '') {
           // withDockerRegistry : docker pipeline 플러그인 설치시 사용가능.
           // dockerHubRegistryCredential : environment에서 선언한 docker_cre
-            sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
-            sh "docker push ${dockerHubRegistry}:latest"
+            bat "docker push ${dockerHubRegistry}:${currentBuild.number}"
+            bat "docker push ${dockerHubRegistry}:latest"
           }  
       }
       post {
       // docker push가 성공하든 실패하든 로컬의 도커이미지는 삭제.
         failure {
           echo 'Docker Image Push failure'
-          sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-          sh "docker rmi ${dockerHubRegistry}:latest"
+          bat "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+          bat "docker rmi ${dockerHubRegistry}:latest"
         }
         success {
           echo 'Docker Image Push success'
-          sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-          sh "docker rmi ${dockerHubRegistry}:latest"
+          bat "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+          bat "docker rmi ${dockerHubRegistry}:latest"
         }
       }
     }
@@ -83,16 +85,16 @@ pipeline {
             branch: 'cicd'  
 
         // 이미지 태그 변경 후 메인 브랜치에 푸시
-        sh "git config --global user.email ${gitEmail}"
-        sh "git config --global user.name ${gitName}"
-        sh "sed -i 's/sbimage:.*/sbimage:${currentBuild.number}/g' deploy/sb-deploy.yml"
+        bat "git config --global user.email ${gitEmail}"
+        bat "git config --global user.name ${gitName}"
+        bat "sed -i 's/sbimage:.*/sbimage:${currentBuild.number}/g' deploy/sb-deploy.yml"
         // deploy폴더의 sd-deploy.yml 파일의 내용을 수정하는 부분.
-        sh "git add ."
-        sh "git commit -m 'fix:${dockerHubRegistry} ${currentBuild.number} image versioning'"
-        sh "git branch -M cicd"
-        sh "git remote remove origin"
-        sh "git remote add origin git@github.com:paduck-96/sogongsogong.git"
-        sh "git push -u origin cicd"
+        bat "git add ."
+        bat "git commit -m 'fix:${dockerHubRegistry} ${currentBuild.number} image versioning'"
+        bat "git branch -M cicd"
+        bat "git remote remove origin"
+        bat "git remote add origin git@github.com:paduck-96/sogongsogong.git"
+        bat "git push -u origin cicd"
 }
 }
   }
