@@ -42,8 +42,8 @@ pipeline {
     }
     stage('Docker Image Build') {
       steps {
-          bat "docker build -t ${dockerHubRegistry}:${currentBuild.number}"
-          bat "docker build -t ${dockerHubRegistry}:latest"
+          sh "docker build -t ${dockerHubRegistry}:${currentBuild.number}"
+          sh "docker build -t ${dockerHubRegistry}:latest"
           }
       post {
         failure {
@@ -62,8 +62,8 @@ pipeline {
           withDockerRegistry(credentialsId: dockerHubRegistryCredential, url: '') {
           // withDockerRegistry : docker pipeline 플러그인 설치시 사용가능.
           // dockerHubRegistryCredential : environment에서 선언한 docker_cri
-            bat "docker push ${dockerHubRegistry}:${currentBuild.number}"
-            bat "docker push ${dockerHubRegistry}:latest"
+            sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
+            sh "docker push ${dockerHubRegistry}:latest"
             // 텀
             sleep 10
           }  
@@ -72,15 +72,15 @@ pipeline {
       // docker push가 성공하든 실패하든 로컬의 도커이미지는 삭제.
         failure {
           echo 'Docker Image Push failure'
-          bat "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-          bat "docker rmi ${dockerHubRegistry}:latest"
+          sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+          sh "docker rmi ${dockerHubRegistry}:latest"
           slackSend (color: "#FF0000", message: "FAILED: Docker Image Push '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 
         }
         success {
           echo 'Docker Image Push success'
-          bat "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
-          bat "docker rmi ${dockerHubRegistry}:latest"
+          sh "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
+          sh "docker rmi ${dockerHubRegistry}:latest"
           slackSend (color: "#0AC9FF", message: "SUCCESS: Docker Image Build '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 
         }
