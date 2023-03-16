@@ -42,8 +42,8 @@ pipeline {
     }
     stage('Docker Image Build') {
       steps {
-          sh "docker build -t ${dockerHubRegistry}:${currentBuild.number}"
-          sh "docker build -t ${dockerHubRegistry}:latest"
+          sh "docker build --tag ${dockerHubRegistry}:${currentBuild.number}"
+          sh "docker build --tag ${dockerHubRegistry}:latest"
           }
       post {
         failure {
@@ -93,16 +93,16 @@ pipeline {
             branch: 'cicd'  
 
         // 이미지 태그 변경 후 메인 브랜치에 푸시
-        bat "git config --global user.email ${gitEmail}"
-        bat "git config --global user.name ${gitName}"
-        bat "sed -i 's/sogong:.*/sogong:${currentBuild.number}/g' deploy/sogong-deploy.yml"
+        sh "git config --global user.email ${gitEmail}"
+        sh "git config --global user.name ${gitName}"
+        sh "sed -i 's/sogong:.*/sogong:${currentBuild.number}/g' deploy/sogong-deploy.yml"
         // deploy폴더의 sd-deploy.yml 파일의 내용을 수정하는 부분.
-        bat "git add ."
-        bat "git commit -m 'fix:${dockerHubRegistry} ${currentBuild.number} diff img version'" 
-        bat "git branch -M cicd"
-        bat "git remote remove origin"
-        bat "git remote add origin git@github.com:paduck-96/sogongsogong.git"
-        bat "git push -u origin cicd"
+        sh "git add ."
+        sh "git commit -m 'fix:${dockerHubRegistry} ${currentBuild.number} diff img version'" 
+        sh "git branch -M cicd"
+        sh "git remote remove origin"
+        sh "git remote add origin git@github.com:paduck-96/sogongsogong.git"
+        sh "git push -u origin cicd"
       }
       post{
       failure{
