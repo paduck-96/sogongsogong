@@ -48,11 +48,11 @@ pipeline {
       post {
         failure {
           echo 'Docker image build failure'
-          slackSend (color: "#FF0000", message: "FAILED: Docker Image Build '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"]
+          slackSend (color: "#FF0000", message: "FAILED: Docker Image Build '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
         success {
           echo 'Docker image build success'
-                    slackSend (color: "#0AC9FF", message: "SUCCESS: Docker Image Build '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"]
+                    slackSend (color: "#0AC9FF", message: "SUCCESS: Docker Image Build '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
       }
     }
@@ -74,14 +74,14 @@ pipeline {
           echo 'Docker Image Push failure'
           bat "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
           bat "docker rmi ${dockerHubRegistry}:latest"
-          slackSend (color: "#FF0000", message: "FAILED: Docker Image Push '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"]
+          slackSend (color: "#FF0000", message: "FAILED: Docker Image Push '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 
         }
         success {
           echo 'Docker Image Push success'
           bat "docker rmi ${dockerHubRegistry}:${currentBuild.number}"
           bat "docker rmi ${dockerHubRegistry}:latest"
-          slackSend (color: "#0AC9FF", message: "SUCCESS: Docker Image Build '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"]
+          slackSend (color: "#0AC9FF", message: "SUCCESS: Docker Image Build '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
 
         }
       }
@@ -107,11 +107,11 @@ pipeline {
       post{
       failure{
         echo "k8s manifest update failure'
-        slackSend (color: "#FF0000", message: "FAILED: Docker Image Push '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"]
+        slackSend (color: "#FF0000", message: "FAILED: Docker Image Push '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
     }
       success {
       echo "k8s manifest update success'
-      slackSend (color: "#0AC9FF", message: "Success: Docker Image Push '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"]
+      slackSend (color: "#0AC9FF", message: "Success: Docker Image Push '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
     }
   }
 }
