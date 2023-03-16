@@ -8,7 +8,7 @@ pipeline {
     gitName = 'paduck-96'
     gitEmail = 'peterrabitt1234@naver.com'
     githubCredential = 'git_cre'
-    dockerHubRegistry = 'paduck/sogong:1.0'
+    dockerHubRegistry = 'paduck/sogong'
     dockerHubRegistryCredential = 'docker_cri'
   }
   stages {
