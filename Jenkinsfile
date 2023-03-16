@@ -106,11 +106,11 @@ pipeline {
       }
       post{
       failure{
-        echo "k8s manifest update failure'
+        echo "k8s manifest update failure"
         slackSend (color: "#FF0000", message: "FAILED: Docker Image Push '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
     }
       success {
-      echo "k8s manifest update success'
+      echo "k8s manifest update success"
       slackSend (color: "#0AC9FF", message: "Success: Docker Image Push '${envJOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
     }
   }
