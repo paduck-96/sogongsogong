@@ -28,7 +28,7 @@ pipeline {
 
     stage('NodeJS Build') {
       steps {
-          bat 'npm install'
+          sh 'npm install'
           echo "node build start"
           }
       post {
