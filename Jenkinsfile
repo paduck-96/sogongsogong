@@ -2,7 +2,7 @@ pipeline {
   agent any
   // any, none, label, node, docker, dockerfile, kubernetes
   tools {
-    nodejs 'my_node'
+    nodejs 'NodeJS 18.12.0'
   }
   environment {
     gitName = 'paduck-96'
