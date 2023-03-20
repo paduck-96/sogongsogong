@@ -14,4 +14,4 @@ spec:
     spec:
       containers:
         - name: sogong
-          image: paduck/sogong:1.0
+          image: paduck/sogong
