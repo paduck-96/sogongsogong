@@ -42,8 +42,8 @@ pipeline {
     }
     stage('Docker Image Build') {
       steps {
-          sh "docker build --tag ${dockerHubRegistry}:${currentBuild.number} ."
-          sh "docker build --tag ${dockerHubRegistry}:latest ."
+          sh "docker build -t ${dockerHubRegistry}:${currentBuild.number} ."
+          sh "docker build -t ${dockerHubRegistry}:latest ."
           }
       post {
         failure {
