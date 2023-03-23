@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sogong-svc
+spec:
+  selector:
+    app: sogong
+  ports:
+    - name: http
+      protocol: TCP
+      port: 30000
+      targetPort: 80
+  type: LoadBalancer
