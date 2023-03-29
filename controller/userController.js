@@ -4,7 +4,7 @@ const User = require('../models/User');
 const jwt = require("jsonwebtoken")
 
 exports.getRegister = (req, res, next)=>{
-    return res.status(200).json({result:"Success", data:"회원가입 페이지 출력"})
+    return res.status(200).json({result:"success", data:"회원가입 페이지 출력"})
 }
 /**
  * 
@@ -24,13 +24,17 @@ exports.postRegister = async (req, res, next) => {
         confirmPassword,
         } = req.body;
         try {
+            if(nickname.trim()==="" || email.trim()===""
+        ||password.trim()===""||confirmPassword.trim()===""){
+            return res.status(400).json({result:"fail", message:"모든 내용을 작성해야 합니다"})
+        }
             if(password !== confirmPassword){
                 //return res.redirect("/register?registerError=비밀번호를 잘못 입력하셨습니다");
-                return res.status(400).json({result:"비밀번호 잘못 입력"})
+                return res.status(400).json({result:"비밀번호를 재확인 해주세요"})
             }
             const reg = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
             if( !reg.test(password) ) {
-                return res.status(400).json({result:"비밀번호 정규식 오류"})
+                return res.status(400).json({result:"비밀번호는 영어 소문자, 대문자와 특수기호를 하나씩 포함한 8글자 이상으로 설정해주세요"})
             }
             const user = await User.findOne({
                 where:{
@@ -49,14 +53,14 @@ exports.postRegister = async (req, res, next) => {
             if(existNickname){
                 return res.status(409).json({result:"이미 사용 중인 닉네임"})
             }
-            const saltRounds = await bcrypt.genSalt(5);
+            const saltRounds = await bcrypt.genSalt(12);
             const hashPassword = await bcrypt.hash(password, saltRounds);
-            await User.create({
+            const data = await User.create({
                     email,
                     nickname,
                     password: hashPassword,
                 })
-                return res.status(201).redirect('/');
+                return res.status(201).json({result:"success", data})
             } catch (error) {
                 console.error(error);
                 return next(error);
@@ -74,45 +78,47 @@ exports.getLogin =  (req, res, next) => {
  * 이메일과 비밀번호로 사용자 로그인 처리 
  */
 exports.postLogin = (req, res, next) => {
-    passport.authenticate('local',(authError, user, info) => {
-        if (authError) {
-            console.error(authError);
-            return next(authError);
+    const {email, password} = req.body;
+    let exUser;
+    User.findOne({
+        where:{
+            email
         }
-        if (!user) {
-            //return res.redirect(`/?loginError=${info.message}`);
-            return res.status(404).json({result:info.message})
+    })
+    .then(user => {
+        if(!user){
+            const err = new Error("존재하지 않는 이메일입니다");
+            err.statusCode = 401;
+            throw err;
         }
-            return req.login(user, {session:false}, (loginError) => {
-        if (loginError) {
-            console.error(loginError);
-            return next(loginError);
+        exUser = user;
+        return bcrypt.compare(password, exUser.password)
+    })
+    .then(isEqual => {
+        if(!isEqual){
+            const err = new Error("비밀번호를 잘못 입력하셨습니다");
+            err.statusCode = 401;
+            throw err;
         }
-        // 클라이언트에게 JWT생성
-		const token = jwt.sign(
-			{ id: user.userId, email: user.email, auth: user.auth },
-			process.env.JWT_SECRET
-		);
-        res.locals.user = token;
-        return res.status(200).json({result:"Sucess", data:token})
-        });
-    })(req, res, next);
+        const token = jwt.sign({
+            id:exUser.id,
+            email:exUser.email
+        }, process.env.JWT_SECRET,{
+            expiresIn: "1h"
+        })
+        return res.status(200).json({result:"success", data:token, userId:exUser.userId})
+    })
+    .catch(err=>{
+        if(!err.statusCode){
+            err.statusCode = 500
+        }
+        next(err);
+    })
 };
 
-exports.getAuth = (req, res, next) => {
-    try {
-	    res.status(200).json({ result:"Success", token });
-	  } catch (error) {
-	    console.error(error);
-	    next(error);
-	  }
-}
-
-exports.postLogout = (req, res) => {
-    req.logout(err=>{
-        if (err) { return next(err); }
-        req.session.destroy();
-        res.locals.user = null;
-        res.status(200).redirect("/");
-        });
-}
+// exports.postLogout = (req, res) => {
+//         //localStorage.clear();
+//         req.session.destory();
+//         req.session = null;
+//         res.status(200).json({result:"success"})
+// }

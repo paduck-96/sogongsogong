@@ -1,15 +1,16 @@
 const Sequelize = require('sequelize');
-module.exports = class Group extends Sequelize.Model {
+module.exports = class Category extends Sequelize.Model {
 static init(sequelize) {
     return super.init({
-    groupId: {
+    categoryId: {
     type: Sequelize.INTEGER,
     allowNull: false,
     primaryKey:true,
     autoIncrement:true,
     },
-    groupName:{
+    categoryName:{
         type:Sequelize.STRING(100),
+        unique:true,
         allowNull:false,
         defaultValue:"미정"
     }
@@ -17,15 +18,15 @@ static init(sequelize) {
         sequelize,
         timestamps: true,
         paranoid: true,
-        modelName: 'Group',
-        tableName: 'Group',
+        modelName: 'Category',
+        tableName: 'Category',
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci',
         });
 }
 static associate(db) {
-    db.Group.belongsToMany(db.Article,{
-         through:"ArticleGroup"
+    db.Category.belongsToMany(db.Article,{
+         through:"ArticleAndCategory", foreignKey:"categoryId"
     });
 }
 };

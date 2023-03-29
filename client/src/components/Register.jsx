@@ -1,6 +1,8 @@
 import React , {useState} from 'react';
+import { useNavigate } from 'react-router';
 
 const RegisterPage = () => {
+    const navigate = useNavigate();
     const [registerInfo, setRegisterInfo] = useState({
         nickname:"",
         email:"",
@@ -17,6 +19,13 @@ const RegisterPage = () => {
     }
     const onSubmitHandler = async (e) => {
         e.preventDefault();
+        if(registerInfo.nickname.trim()==="" || registerInfo.email.trim()===""
+        ||registerInfo.password.trim()===""||registerInfo.confirmPassword.trim()===""){
+            alert("내용 입력 필수")
+        }
+        if(registerInfo.password.trim() !== registerInfo.confirmPassword.trim()){
+            alert("비밀번호 재확인")
+        }
         const response = await fetch("http://localhost/register", {
             method:"POST",
             headers:{
@@ -29,7 +38,7 @@ const RegisterPage = () => {
                 confirmPassword:registerInfo.confirmPassword
             })
         }).then(res=>res.json());
-        alert(response.result);
+        if(response.result === "success") navigate("/", {replace:true})
     }
     return (
         <div>

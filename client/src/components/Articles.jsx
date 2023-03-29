@@ -1,33 +1,92 @@
-import React from 'react';
-import { useSearchParams, Outlet } from 'react-router-dom';
-import ArticleItem from "./ArticleItem";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Articles = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const group = searchParams.get("group");
-
-    const onClickHandler = (e) => {
-        e.preventDefault();
-        setSearchParams(group);
-    }
-
-    return (
-        <div>
-            <header>
-                <button onClick={onClickHandler} value='athlete'>운동</button>
-                <button onClick={onClickHandler} value='food'>음식</button>
-                <button onClick={onClickHandler} value='traffic'>교통</button>
-            </header>
-            <main>
-                <ul>
-                    <ArticleItem articleGroup={'athelete'} articleId={'1'}/>
-                    <ArticleItem articleGroup={'food'} articleId={'2'}/>
-                    <ArticleItem articleGroup={'미정'} articleId={'3'}/>
-                </ul>
-                <Outlet />
-            </main>
-        </div>
-    );
-};
+    const [articles, setArticles] = useState([]);
+    const [categories, setCategories] = useState([]);
+    useEffect(()=>{
+            fetch('http://localhost/articles',{
+                headers:{
+                    "Content-Type":"application/json",
+                }
+            })
+            .then(res=>res.json())
+            .then(res => {
+                setArticles(res.article);
+                setCategories(res.category);
+            });
+                }, [setArticles, setCategories])
+                if(categories === "카테고리 없음"){
+                    if(articles === "게시글 없음"){
+                        return (
+                                <main>
+                                    <ul>
+                                        <li>
+                                            <h2>{articles}</h2>
+                                        </li>
+                                    </ul>
+                                </main>
+                        )
+                    }else{
+                    const articleList = articles.map(article=>
+                            (
+                                    <li key={article.articleId}>
+                                        <h2>
+                                            <Link to={`/article/${article.articleId}`}>
+                                                {article.articleTitle}
+                                            </Link>
+                                        </h2>
+                                        <hr/>
+                                    </li>
+                            )
+                    )
+                        return(
+                                <main>
+                                    <div>
+                                        <ul>
+                                            {articleList}
+                                        </ul>
+                                    </div>
+                                </main>
+                        )
+                    }
+                }else{
+                    const articleList = articles.map(article=>
+                        (
+                                <li key={article.articleId}>
+                                    <h2>
+                                        <Link to={`/article/${article.articleId}`}>
+                                            {article.articleTitle}
+                                        </Link>
+                                    </h2>
+                                    <hr/>
+                                </li>
+                        )
+                )
+                const categoryList = categories.map(category=>(
+                    <button key={categories.indexOf(category)}>
+                        <Link to={`/articles/${category}`}>
+                            {category}
+                        </Link>
+                    </button>
+                ))
+                    return(
+                        <>
+                        <header>
+                            <div>
+                                {categoryList}
+                            </div>
+                        </header>
+                            <main>
+                                <div>
+                                    <ul>
+                                        {articleList}
+                                    </ul>
+                                </div>
+                            </main>
+                        </>
+                    )
+                }
+                }
 
 export default Articles;

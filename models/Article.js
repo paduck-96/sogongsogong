@@ -22,13 +22,6 @@ static init(sequelize) {
         len:[1, 1024]
     }
     },
-    articleReaction:{
-        type:Sequelize.STRING(1020),
-        allowNull:false,
-        validate:{
-            is:/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
-        }
-    }
     }, {
         sequelize,
         timestamps: true,
@@ -42,8 +35,10 @@ static init(sequelize) {
 static associate(db) {
     db.Article.belongsTo(db.User,
         {foreignKey:"fk_user_article", targetKey:"userId"});
-    db.Article.belongsToMany(db.Group,{
-         through:"ArticleGroup"
+        db.Article.hasMany(db.Reaction,
+            {foreignKey:"fk_article_reaction", sourceKey:"articleId"});
+    db.Article.belongsToMany(db.Category,{
+         through:"ArticleAndCategory", foreignKey:"articleId"
     });
 }
 };
