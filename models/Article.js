@@ -29,16 +29,14 @@ static init(sequelize) {
         modelName: 'Article',
         tableName: 'Article',
         charset: 'utf8mb4',
-        collate: 'utf8mb4_general_ci',
+        collate: 'utf8mb4_unicode_ci',
         });
 }
 static associate(db) {
     db.Article.belongsTo(db.User,
         {foreignKey:"fk_user_article", targetKey:"userId"});
-        db.Article.hasMany(db.Reaction,
-            {foreignKey:"fk_article_reaction", sourceKey:"articleId"});
-    db.Article.belongsToMany(db.Category,{
-         through:"ArticleAndCategory", foreignKey:"articleId"
-    });
+    db.Article.hasMany(db.Reaction,
+        {foreignKey:"fk_article_reaction", sourceKey:"articleId"});
+    db.Article.hasMany(db.Category, { foreignKey: "fk_article_category",sourceKey:"articleId" });
 }
 };

@@ -7,7 +7,7 @@ const User = require('./User');
 const Article = require('./Article');
 const Category = require('./Category');
 const Reaction = require("./Reaction");
-const ArticleAndCategory = require("./ArticleAndCategory");
+const Emojis = require("./Emoji");
 
 const db = {};
 
@@ -22,18 +22,17 @@ db.User = User;
 db.Article = Article;
 db.Category = Category;
 db.Reaction = Reaction;
-db.ArticleAndCategory = ArticleAndCategory;
+db.Emojis = Emojis;
 
 User.init(sequelize);
 Article.init(sequelize);
 Category.init(sequelize);
 Reaction.init(sequelize);
-ArticleAndCategory.init(sequelize);
+Emojis.init(sequelize);
 
 User.associate(db);
 Article.associate(db);
 Category.associate(db);
 Reaction.associate(db);
-ArticleAndCategory.associate(db);
 
 module.exports = db;
