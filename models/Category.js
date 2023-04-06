@@ -21,12 +21,10 @@ static init(sequelize) {
         modelName: 'Category',
         tableName: 'Category',
         charset: 'utf8mb4',
-        collate: 'utf8mb4_general_ci',
+        collate: 'utf8mb4_unicode_ci',
         });
 }
 static associate(db) {
-    db.Category.belongsToMany(db.Article,{
-         through:"ArticleAndCategory", foreignKey:"categoryId"
-    });
-}
+    db.Category.belongsTo(db.Article, { foreignKey: "fk_article_category", targetKey:"articleId" });
 };
+}

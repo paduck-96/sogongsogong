@@ -85,6 +85,12 @@ var options = {
   user: process.env.DB_ID,
   password: process.env.DB_PW,
   database: process.env.DB_NAME,
+  dialect: 'mariadb',
+  dialectOptions: {
+    timezone: 'Etc/GMT0',
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_unicode_ci',
+  },
 };
 const MySQLStore = require("express-mysql-session")(session);
 app.use(
@@ -111,6 +117,7 @@ sequelize
   .catch((err) => {
     console.error("DB 접속 오류 : ", err.message);
   });
+
 
 /**
  * 앞으로 사용되는 Router들은 여기에 Import
