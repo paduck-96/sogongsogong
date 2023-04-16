@@ -7,6 +7,7 @@ const Articles = () => {
   const [emojis, setEmojis] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState('');
+  const [selectedArticleId, setSelectedArticleId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,11 +19,12 @@ const Articles = () => {
     fetchData();
   }, []);
 
-  const onClickHandler = async () => {
-    const response = await fetch('http://localhost/articles/emojis');
+  const onClickHandler = async (articleId) => {
+    const response = await fetch('http://localhost/article/emojis');
     const emojis = await response.json();
     setEmojis(emojis);
     setModalOpen(true);
+    setSelectedArticleId(articleId);
   };
 
   const registerReaction = async () => {
@@ -32,14 +34,14 @@ const Articles = () => {
       return;
     }
 
-    const response = await fetch('http://localhost/articles/emojis', {
+    const response = await fetch('http://localhost/article/emojis', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         emoji: selectedEmoji,
-        article: articles.articleId,
+        articleId: selectedArticleId,
       }),
     });
 
@@ -54,7 +56,7 @@ const Articles = () => {
       }
       const reactionsKey = Object.keys(reactions);
 
-      return reactionsKey.map((key,idx) => (
+      return reactionsKey.map((key) => (
         <div>
             <span>{key}</span> 
             <span>{reactions[key]}</span>
@@ -78,10 +80,10 @@ const Articles = () => {
           </h2>
           <span>카테고리: {category ? category.categoryName : '없음'}</span><br></br>
           <span>작성자: {article.User.nickname}</span>
-          <h4>내용: {article.articleContent}</h4>
+          <h4 >내용: {article.articleContent}</h4>
           {renderReactionCounts(article.Reactions)}
           <br></br>
-          <button onClick={onClickHandler}>반응</button>
+          <button onClick={()=>onClickHandler(article.articleId)}>반응</button>
           <hr />
         </li>
       );
@@ -94,7 +96,7 @@ const Articles = () => {
     }
 
     return categories.map((category) => (
-      <button key={category}>
+      <button>
         <Link to={`/articles/${category.categoryName}`}>카테고리: {category.categoryName}</Link>
       </button>
     ));
