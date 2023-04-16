@@ -41,22 +41,26 @@ exports.postArticleWrite = async ( req, res, next) => {
     });
 
     // 카테고리 이름 분리
-    const categories = categoryName.split(",");
+    const categories = categoryName.split(",").map((category) => category.trim());
+    // 영어 제거
+    const englishCategoryRegex = /[A-Za-z]/;
+    if (categories.some((category) => englishCategoryRegex.test(category))) {
+        return res
+            .status(400)
+            .json({ result: "fail", message: "카테고리에는 한글만 작성해주세요" });
+    }
+    // 중복 제거
+    const uniqueCategories = [...new Set(categories)];
 
     // 카테고리 생성 및 게시글과 연결
-    const categoryPromises = categories.map(async (category) => {
-        // 카테고리 찾거나 없으면 새로 생성
-        const [categoryInstance] = await Category.findOrCreate({
-        where: { categoryName: category.trim() },
-        defaults: { categoryName: category.trim() },
+    for (const category of uniqueCategories) {
+        const categoryInstance = await Category.create({
+          categoryName:category
         });
-
-        // 게시글과 카테고리 연결
+    
         await article.addCategory(categoryInstance);
-    });
-
-    await Promise.all(categoryPromises);
-
+      }
+      
     return res
         .status(201)
         .json({ result: "success", message: "게시글 생성", data: article });

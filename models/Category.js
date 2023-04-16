@@ -10,7 +10,6 @@ static init(sequelize) {
     },
     categoryName:{
         type:Sequelize.STRING(100),
-        unique:true,
         allowNull:false,
         defaultValue:"미정"
     }
