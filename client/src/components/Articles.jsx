@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 const Articles = () => {
   const [articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [reactions, setReactions] = useState([]);
   const [emojis, setEmojis] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState('');
@@ -13,12 +12,8 @@ const Articles = () => {
     const fetchData = async () => {
       const response = await fetch('http://localhost/articles');
       const { data } = await response.json();
-      const categories = Array.from(
-        new Set(data.categories.map((category) => category.categoryName))
-      );
       setArticles(data.articles);
-      setCategories(categories);
-      setReactions(data.reactions);
+    setCategories(data.categories);
     };
     fetchData();
   }, []);
@@ -48,32 +43,34 @@ const Articles = () => {
       }),
     });
 
-    const data = await response.json();
-    console.log(data);
+    await response.json();
     setSelectedEmoji(null);
     setModalOpen(false);
   };
 
-  const renderReactionCounts = (articleId) => {
-    const articleReactions = reactions.filter(
-      (reaction) => reaction.articleId === articleId
-    );
-    return articleReactions.map((reaction) => (
-      <span key={reaction.reactionContent}>
-        {reaction.reactionContent}: {reaction.count}
-      </span>
-    ));
+  const renderReactionCounts = (reactions) => {
+    if (!reactions || reactions.length === 0) {
+        return null;
+      }
+      const reactionsKey = Object.keys(reactions);
+
+      return reactionsKey.map((key,idx) => (
+        <div>
+            <span>{key}</span> 
+            <span>{reactions[key]}</span>
+        </div>
+      ));
   };
   
-
   const renderArticleList = () => {
     if (!articles || articles.length === 0) {
       return <h2>게시글 없음</h2>;
     }
     return articles.map((article) => {
       const category = categories.find(
-        (category) => category.articleId === article.articleId
+        (category) => category.fk_article_category === article.articleId
       );
+      
       return (
         <li key={article.articleId}>
           <h2>
@@ -81,9 +78,10 @@ const Articles = () => {
               제목: {article.articleTitle}
             </Link>
           </h2>
-          <span>카테고리: {category ? category.categoryName : '없음'}</span>
+          <span>카테고리: {category ? category.categoryName : '없음'}</span><br></br>
+          <span>작성자: {article.User.nickname}</span>
           <h4>내용: {article.articleContent}</h4>
-          {renderReactionCounts(article.articleId)}
+          {renderReactionCounts(article.Reactions)}
           <br></br>
           <button onClick={onClickHandler}>반응</button>
           <hr />
@@ -99,7 +97,7 @@ const Articles = () => {
 
     return categories.map((category) => (
       <button key={category}>
-        <Link to={`/articles/${category}`}>카테고리: {category}</Link>
+        <Link to={`/articles/${category.categoryName}`}>카테고리: {category.categoryName}</Link>
       </button>
     ));
   };
@@ -158,60 +156,3 @@ const Articles = () => {
 };
 
 export default Articles;
-
-
-// import React, { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
-
-// const Articles = () => {
-//   const [articles, setArticles] = useState([]);
-
-//   useEffect(() => {
-//     fetch("http://localhost/articles", {
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     })
-//       .then((res) => res.json())
-//       .then((res) => {
-//         setArticles(res.articles);
-//       });
-//   }, []);
-
-//   if (!articles.length) {
-//     return (
-//       <main>
-//         <ul>
-//           <li>
-//             <h2>게시글 없음</h2>
-//           </li>
-//         </ul>
-//       </main>
-//     );
-//   }else{
-//     const articleList = articles.map((article) => (
-//         <li key={article.articleId}>
-//           <span>
-//             <Link to={`/article/${article.articleId}`}>제목: {article.articleTitle}</Link>
-//           </span>
-//           <h3>내용: {article.articleContent}</h3>
-//           <h4>작성일: {article.createdAt} 작성자: {article.nickname}</h4>
-//           <div>
-//             {article.Reactions.map((reaction) => (
-//               <span key={reaction.emoji}>{reaction.emoji}: {reaction.count}</span>
-//             ))}
-//           </div>
-//           <button>이모지 등록</button>
-//           <hr />
-//         </li>
-//       ));
-    
-//       return (
-//         <main>
-//           <ul>{articleList}</ul>
-//         </main>
-//       );
-//   }
-// };
-
-// export default Articles;

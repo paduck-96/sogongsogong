@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import {Link, useParams } from 'react-router-dom';
+// import React, {useState, useEffect} from 'react';
+// import {Link, useParams } from 'react-router-dom';
 
-const Articles = () => {
+// const Articles = () => {
     // const {articlegroup} = useParams();
     // const [groupArticles, setGroupArticles] = useState([]);
     // useEffect(()=>{
@@ -47,50 +47,63 @@ const Articles = () => {
     //                     </div>
     //                 </main>
     //         )
-    const { articlegroup } = useParams();
-  const [groupArticles, setGroupArticles] = useState([]);
-
-  useEffect(() => {
-    fetch(`http://localhost/articles/${articlegroup}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => setGroupArticles(res.data));
-  }, [articlegroup]);
-
-  if (groupArticles.length===1) {
-    return (
-      <div>
+    import React, { useEffect, useState } from "react";
+    import { useParams, Link } from "react-router-dom";
+    
+    const GroupArticles = () => {
+      const { articlegroup } = useParams();
+      const [groupArticles, setGroupArticles] = useState([]);
+    
+      useEffect(() => {
+        fetch(`http://localhost/articles/${articlegroup}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((res) => setGroupArticles(res.articles));
+      }, [articlegroup]);
+    
+      if (!groupArticles || groupArticles.length === 0) {
+        return (
+          <div>
+            <main>
+              <ul>
+                <li>
+                  <h2>{`${articlegroup} 게시글 없음`}</h2>
+                </li>
+              </ul>
+            </main>
+          </div>
+        );
+      }
+    
+      const renderReactionCounts = (reactions) => {
+        return reactions.map((reaction) => (
+          <span key={reaction.emoji}>
+            {reaction.emoji}: {reaction.count}
+          </span>
+        ));
+      };
+    
+      const groupList = groupArticles.map((article) => (
+        <li key={article.articleId}>
+          <h2>
+            <Link to={`/article/${article.articleId}`}>{article.articleTitle}</Link>
+          </h2>
+          <p>{`작성자: ${article.User.nickname}`}</p>
+          {renderReactionCounts(article.Reactions)}
+          <hr />
+        </li>
+      ));
+    
+      return (
         <main>
-          <ul>
-            <li>
-              <h2>{`${articlegroup} 게시글 없음`}</h2>
-            </li>
-          </ul>
+          <div>
+            <ul>{groupList}</ul>
+          </div>
         </main>
-      </div>
-    );
-  }
-
-  const groupList = groupArticles.map((article) => (
-    <li key={article.articleId}>
-      <h2>
-        <Link to={`/article/${article.articleId}`}>{article.articleTitle}</Link>
-      </h2>
-      <p>{`작성자: ${article.User.userName}`}</p>
-      <hr />
-    </li>
-  ));
-
-  return (
-    <main>
-      <div>
-        <ul>{groupList}</ul>
-      </div>
-    </main>
-  );
-};
-
-export default Articles;
+      );
+    };
+    
+    export default GroupArticles;
