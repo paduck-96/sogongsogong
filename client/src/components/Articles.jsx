@@ -13,7 +13,7 @@ const Articles = () => {
       const response = await fetch('http://localhost/articles');
       const { data } = await response.json();
       setArticles(data.articles);
-    setCategories(data.categories);
+      setCategories(data.categories);
     };
     fetchData();
   }, []);
@@ -67,16 +67,14 @@ const Articles = () => {
       return <h2>게시글 없음</h2>;
     }
     return articles.map((article) => {
-      const category = categories.find(
+      const category = article.Categories.find(
         (category) => category.fk_article_category === article.articleId
       );
-      
+
       return (
         <li key={article.articleId}>
           <h2>
-            <Link to={`/article/${article.articleId}`}>
               제목: {article.articleTitle}
-            </Link>
           </h2>
           <span>카테고리: {category ? category.categoryName : '없음'}</span><br></br>
           <span>작성자: {article.User.nickname}</span>

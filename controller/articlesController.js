@@ -70,98 +70,60 @@ exports.getArticles =  async (req, res, next) => {
 }
 
 exports.getGroupArticles = async ( req, res, next) => {
-    // const {articlegroup} = req.params;
-    // try{
-    //     const categoryArr = await Category.findAll({
-    //         where:{
-    //             categoryName:articlegroup,
-    //             deletedAt:{
-    //                 [Op.is]:null
-    //             }
-    //         },
-    //         attributes:["categoryId"]
-    //     })
-    //     const articleArr = [];
-    //     for(let category of categoryArr){
-    //         const data = await ArticleAndCategory.findAll({
-    //             where:{categoryId:category.categoryId},
-    //             attributes:["articleId"]
-    //         })
-    //         articleArr.push(data[0]);
-    //     }
-    //     const data = [];
-    //     for(let article of articleArr){
-    //         const result = await Article.findAll({
-    //             where:{
-    //                 articleId:article.articleId,
-    //                 deletedAt:{
-    //                     [Op.is]:null
-    //                 }
-    //             }
-    //         })
-    //         data.push(result[0]);
-    //     }
-    //     if(data.length == 0){
-    //         return res.json({result:"success", data:`${articlegroup} 없음`}).status(204);
-    //     }
-    //     return res.json({result:"success", data}).status(200);
-    // }catch(error){
-    //     console.error(error);
-    //     return next(error);
-    // }
     const { articlegroup } = req.params;
+
     try {
       const categories = await Category.findAll({
         where: {
           categoryName: articlegroup,
           deletedAt: null,
         },
-        attributes: ["categoryId"],
+        attributes: ["fk_article_category"],
       });
-    
+
       if (!categories.length) {
-        return res.status(204).json({ result: "success", data: `${articlegroup} 없음` });
+        return res.status(204).json({ result: "fail", data: `${articlegroup} 없음` });
       }
     
-      const categoryIds = categories.map((category) => category.categoryId);
-    
-      const articles = await Article.findAll({
-        where: {
-          fk_article_category: {
-            [Sequelize.Op.in]: categoryIds,
+      
+      const promiseJob = categories.map(async article=>{
+        const data = await Article.findOne({
+          where:{
+            deletedAt:null, 
+            articleId:article.fk_article_category
           },
-          deletedAt: null,
-        },
-        attributes: [
-          "articleId",
-          "articleTitle",
-          "articleContent",
-          "createdAt",
-          "updatedAt",
-        ],
-      });
-    
-      const users = await User.findAll({
-        attributes: ["userId", "nickname"],
-      });
-    
-      const reactions = await Reaction.findAll({
-        attributes: [
-          "reactionId",
-          "reactionContent",
-          "fk_article_reaction",
-          [Sequelize.fn("count", Sequelize.col("reactionContent")), "count"],
-        ],
-        group: ["reactionContent", "fk_article_reaction"],
-      });
-    
+          attributes:[
+            "articleId",
+            "articleTitle",
+            "articleContent",
+            "createdAt",
+            "updatedAt",
+          ],
+          include:[
+            {
+              model: User,
+              attributes: ["userId", "nickname"],
+            },
+            {
+              model: Reaction,
+              attributes: [
+                "reactionContent",
+                [Sequelize.fn("count", Sequelize.col("reactionContent")), "count"],
+              ],
+            },
+          ]
+        })
+        return data;
+      })
+
+      const articles = await Promise.all(promiseJob)
+
       res.status(200).json({
         result: "success",
+        message:`${articlegroup} 게시글 조회 완료!`,
         data: {
           articles,
           categoryName: articlegroup,
-          users,
-          reactions,
         },
       });
     } catch (error) {

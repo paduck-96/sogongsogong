@@ -38,11 +38,12 @@ const Write = () => {
                 categoryName:articleInfo.categoryName,
                 userId: localStorage.getItem("userId")
             })
-        }).then(res=>res.json());
+        }).then(res=>res.json())
+        .catch(err=>console.log(err))
         if(response.result ==="success"){
             return navigate("/articles", {replace:true})
         }else{
-            alert(response.data)
+            alert(response.message)
         }
     }
     return (
