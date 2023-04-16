@@ -1,7 +1,8 @@
-const jwt = require("jsonwebtoken")
 const { ArticleAndCategory } = require("../models");
 const Article = require("../models/Article");
 const Category = require("../models/Category");
+const Emojis = require('../models/Emoji');
+const Reaction = require("../models/Reaction")
 
 exports.getArticleWrite = async( req, res, next) => {
     try{
@@ -60,7 +61,7 @@ exports.postArticleWrite = async ( req, res, next) => {
     
         await article.addCategory(categoryInstance);
       }
-      
+
     return res
         .status(201)
         .json({ result: "success", message: "게시글 생성", data: article });
@@ -175,5 +176,31 @@ exports.deleteArticle = async ( req, res, next) => {
     }catch(err){
         console.error(err);
         next(err);
+    }
+}
+
+// 이모지 창 팝업
+exports.getEmojis = async (req, res, next) => {
+    const emojis = await Emojis.findAll({
+        attributes:["emojiChar"]
+    });
+    return res.json(emojis);
+}
+
+// 이모지 저장
+exports.postEmojis = async (req, res, next) => {
+    const { emoji, articleId } = req.body;
+    try {
+        const article = await Article.findOne({
+            where:{articleId}
+        });
+        const reaction = await Reaction.create({
+            reactionContent:emoji,
+        });
+        await article.addReaction(reaction);
+        return  res.json({ result:"success", data:reaction});
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Server error' });
     }
 }
