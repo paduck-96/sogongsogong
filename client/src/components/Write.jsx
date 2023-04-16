@@ -36,6 +36,7 @@ const Write = () => {
                 articleTitle:articleInfo.articleTitle,
                 articleContent:articleInfo.articleContent,
                 categoryName:articleInfo.categoryName,
+                userId: localStorage.getItem("userId")
             })
         }).then(res=>res.json());
         if(response.result ==="success"){

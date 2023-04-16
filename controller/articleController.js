@@ -14,40 +14,56 @@ exports.getArticleWrite = async( req, res, next) => {
     return res.status(200).json({result:"success", message:"글쓰기 페이지 출력"})
 }
 exports.postArticleWrite = async ( req, res, next) => {
-    const {articleTitle, articleContent, categoryName} = req.body;
+    const { articleTitle, articleContent, categoryName, userId } = req.body;
 
-    try{
-        if(articleTitle.trim() === "" || articleContent.trim() === ""){
-            return res.status(400).json({result:"fail", message:"제목과 내용을 입력해주세요"})
-        }
-        if(articleTitle.trim().length>200){
-            return res.status(400).json({result:"fail", message:"제목은 200자를 넘을 수 없습니다"})
-        }
-        if(articleContent.trim().length>1024){
-            return res.status(400).json({result:"fail", message:"내용은 1024자를 넘을 수 없습니다"})
-        }
-        const data = await Article.create({
-            articleTitle,
-            articleContent,
-            fk_user_article:req.userId
-        },{
-            include:Category
-        })
-        const categories = categoryName.split(",");
-        let response = {};
-        categories.map(async category=>{
-            const result = await Category.create({
-                categoryName:category.trim()
-            })
-            response += await data.addCategory(result.categoryId);
-        })
-        return res.status(201).json({result:"success", message:"게시글 생성", data:response});
-    }catch(err){
-        console.log(jwt.verify(req.heaader.authorization, process.env.JWT_SECRET))
-        console.error(err);
-        return next(err);
+    try {
+    if (articleTitle.trim() === "" || articleContent.trim() === "") {
+        return res
+        .status(400)
+        .json({ result: "fail", message: "제목과 내용을 입력해주세요" });
     }
+    if (articleTitle.trim().length > 200) {
+        return res
+        .status(400)
+        .json({ result: "fail", message: "제목은 200자를 넘을 수 없습니다" });
+    }
+    if (articleContent.trim().length > 1024) {
+        return res
+        .status(400)
+        .json({ result: "fail", message: "내용은 1024자를 넘을 수 없습니다" });
+    }
+    
+    // 게시글 생성
+    const article = await Article.create({
+        articleTitle,
+        articleContent,
+        fk_user_article: userId
+    });
 
+    // 카테고리 이름 분리
+    const categories = categoryName.split(",");
+
+    // 카테고리 생성 및 게시글과 연결
+    const categoryPromises = categories.map(async (category) => {
+        // 카테고리 찾거나 없으면 새로 생성
+        const [categoryInstance] = await Category.findOrCreate({
+        where: { categoryName: category.trim() },
+        defaults: { categoryName: category.trim() },
+        });
+
+        // 게시글과 카테고리 연결
+        await article.addCategory(categoryInstance);
+    });
+
+    await Promise.all(categoryPromises);
+
+    return res
+        .status(201)
+        .json({ result: "success", message: "게시글 생성", data: article });
+    } catch (err) {
+    console.error(err);
+    return next(err);
+    }
 }
 
 exports.getArticleViewAndUpdate = async ( req, res, next) => {
