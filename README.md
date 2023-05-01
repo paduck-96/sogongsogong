@@ -116,7 +116,9 @@
 This is an example of how to list things you need to use the software and how to install them.
 * docker
   ```sh
-  docker run paduck/sogongsogong
+  docker pull paduck/sogongsogong:latest
+  
+  docker run [image name]
   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -131,10 +133,10 @@ This is an example of how to list things you need to use the software and how to
 타인의 게시글을 읽거나 리액션을 달 수 있습니다.  
 서비스가 마음에 들었다면 구독을 통해 조금 더 다양한 느낌의 서비스를 이용할 수 있습니다
 
+<h6>[반응 등록]</h6>
+<img width="50%" src="https://user-images.githubusercontent.com/84844841/235450343-48a0f5ec-f38f-4d22-b0f1-2930cd191986.gif"/>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- ROADMAP -->
 ## 개발 예정 사항
