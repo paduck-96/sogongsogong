@@ -109,33 +109,15 @@
 <!-- GETTING STARTED -->
 ## 시작하기
 
-### <strong>배포 후 수정 예정입니다</strong>
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+### <strong>현재는 배포 중지하였습니다</strong>
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+This is an example of how to list things you need to use the software and how to install them.
+* docker
+  ```sh
+  docker run paduck/sogongsogong
+  ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -149,7 +131,6 @@ _Below is an example of how you can instruct your audience on installing and set
 타인의 게시글을 읽거나 리액션을 달 수 있습니다.  
 서비스가 마음에 들었다면 구독을 통해 조금 더 다양한 느낌의 서비스를 이용할 수 있습니다
 
-_경험을 위해 직접 사용해보세요 [소소한 공감;소공](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -161,45 +142,20 @@ _경험을 위해 직접 사용해보세요 [소소한 공감;소공](https://ex
 - 프로젝트 백엔드 개발
   - [ ] 자동 로그아웃 기능 수정
   - [ ] 소셜 로그인 추가
-  - [ ] 리액션 서비스 추가
+  - [x] 리액션 서비스 추가
   - [ ] 구독 서비스 추가
 - 프로젝트 프론트엔드 개발
   - [ ] TailWindCSS활용해 페이지 꾸미기
   - [ ] 소셜 로그인 페이지 추가
-  - [ ] 리액션 작성창 구성
+  - [x] 리액션 작성창 구성
   - [ ] 구독 관련 페이지 구성
 - 배포
-  - 클라우드 활용
-    - [ ] 클라우드 상 배포 전반적인 과정 학습
-    - [ ] 클라우드 배포
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 학습 예정 사항
 - [ ] 타입스크립트로 백엔드 서버 변경하기  
   * [TypeScript Server]()
-- [ ] Spring Boot로 백엔드 서버 변경하기  
-  * [Spring Boot Server]()
-
-
-
-<!-- CONTRIBUTING -->
-<!-- ## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p> -->
-
-
 
 <!-- LICENSE -->
 ## 라이센스
